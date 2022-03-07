@@ -1,4 +1,4 @@
-package com.zoheeb.server;
+package com.zoheeb.server.controller;
 
 import com.zoheeb.server.enumeration.Status;
 import com.zoheeb.server.model.Response;
@@ -35,8 +35,8 @@ public class ServerController {
     }
 
     @GetMapping("/ping/{ipAdress}")
-    public ResponseEntity<Response> pingServer(@PathVariable("ipAddress") String ipAdress ) throws IOException {
-        Server server = serverService.ping(ipAdress);
+    public ResponseEntity<Response> pingServer(@PathVariable("ipAddress") String ipAddress ) throws IOException {
+        Server server = serverService.ping(ipAddress);
         return ResponseEntity.ok(
                 Response.builder()
                         .timeStamp(now())
