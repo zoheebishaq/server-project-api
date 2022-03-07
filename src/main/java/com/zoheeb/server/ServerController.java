@@ -1,12 +1,17 @@
 package com.zoheeb.server;
 
+import com.zoheeb.server.enumeration.Status;
 import com.zoheeb.server.model.Response;
+import com.zoheeb.server.model.Server;
 import com.zoheeb.server.service.ServerServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.io.IOException;
 
 import static java.time.LocalDateTime.now;
 import static java.util.Map.of;
@@ -30,12 +35,13 @@ public class ServerController {
     }
 
     @GetMapping("/ping/{ipAdress}")
-    public ResponseEntity<Response> getServers(){
+    public ResponseEntity<Response> pingServer(@PathVariable("ipAddress") String ipAdress ) throws IOException {
+        Server server = serverService.ping(ipAdress);
         return ResponseEntity.ok(
                 Response.builder()
                         .timeStamp(now())
-                        .data(of("server",serverService.list(30)))
-                        .message("Servers retrieved")
+                        .data(of("server",server))
+                        .message(server.getStatus() == Status.SERVER_UP ? "Ping sucess": "Ping failed")
                         .statusCode(OK.value())
                         .build()
         );
